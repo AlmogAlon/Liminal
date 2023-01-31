@@ -1,0 +1,31 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+ 
+generator client {
+  provider = "prisma-client-js"
+}
+ 
+model Author {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  Tasks Task[]
+}
+ 
+enum Status {
+  READY
+  IN_PROGRESS
+  DONE
+}
+
+model Task {
+  id       Int    @id @default(autoincrement())
+  title    String 
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId Int
+  description String
+  status Status @default(READY)
+  attachedIn Task[]  @relation("TaskMention")
+  attaching Task[]  @relation("TaskMention")
+}
